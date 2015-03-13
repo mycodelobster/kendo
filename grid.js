@@ -1,25 +1,28 @@
 <script type="text/javascript">
 var app = angular.module("App", [ "kendo.directives" ]);
 app.controller('Ctrl', function($scope, $http){
+    url = "<?=base_url('customer')?>";
+
+    var productId = 0;
     $scope.gridData = new kendo.data.DataSource({
         transport: {
             read:{
-                url:'get_data',
+                url:url+'/get_data',
                 dataType:'json',
                 type:'post'
             },
             update:{
-                url:'update',
+                url:url+'/update',
                 dataType:'json',
                 type:'post'
             },
             destroy:{
-                url:'delete',
+                url:url+'/delete',
                 dataType:'json',
                 type:'post'
             },
             create:{
-                url:'create',
+                url:url+'/create',
                 dataType:'json',
                 type:'get'
             },
@@ -82,4 +85,85 @@ app.controller('Ctrl', function($scope, $http){
         pageable:{refresh:true},
         editable:'popup',
     }
-  </script>
+
+    $scope.modal = function(dataItem){
+        $scope.modal_data = dataItem;
+        $scope.win1.center().open();
+
+        $scope.submit = function(){
+
+            $http.post(url+'/test',dataItem).success(function(res){
+                console.log(res);
+                $scope.win1.close();
+                $scope.notf1.show('Info Updated');
+            })
+        }
+    }
+
+    $scope.catList = {
+        dataSource: new kendo.data.DataSource({
+            transport: {
+                read: "api/get_cat",
+                data: function () {
+                    return result = {
+                        category_id: this.value(),
+                        description: this.text()
+                    };
+                }
+            },
+            schema: {
+                data: "data"
+            }
+        }),
+        index:0,
+        dataTextField:'description',
+        dataValueField:'category_id',
+        filter:'contains',
+        optionLabel: {
+          description: "Select Category",
+          category_id: ""
+        },
+        change: function(e) {
+            category_id = e.sender.value();
+            if(category_id!=''){
+                $scope.gridData.filter({field:"stock_master.category_id", operator: "eq", value:category_id});
+            }
+        }
+    };
+
+
+    $scope.stockList = {
+        dataSource: new kendo.data.DataSource({
+            serverFiltering: true,
+            transport: {
+                read: "api/get_stock",
+                dataType:'json',
+                parameterMap: function(options, operation) {
+                    return {
+                        category_id: options.filter.filters[0].value
+                    }
+                }
+            },
+            schema: {
+                data: "data"
+            }
+        }),
+        cascadeFrom:"category",
+        optionLabel: {
+          description: "Select Product",
+          stock_id: ""
+        },
+        dataTextField:'description',
+        dataValueField:'stock_id',
+        filter:'contains',
+        index:0,
+        autobind:false,
+        change: function(e) {
+            var stock_id = e.sender.value();
+            if(stock_id!=''){
+                $scope.gridData.filter({field:"stock_master.stock_id", operator: "eq", value:stock_id});
+            }
+        },
+    };
+})
+</script>
