@@ -1,28 +1,25 @@
 <script type="text/javascript">
 var app = angular.module("App", [ "kendo.directives" ]);
 app.controller('Ctrl', function($scope, $http){
-    url = "<?=base_url('customer')?>";
-
-    var productId = 0;
     $scope.gridData = new kendo.data.DataSource({
         transport: {
             read:{
-                url:url+'/get_data',
+                url:'get_data',
                 dataType:'json',
                 type:'post'
             },
             update:{
-                url:url+'/update',
+                url:'update',
                 dataType:'json',
                 type:'post'
             },
             destroy:{
-                url:url+'/delete',
+                url:'delete',
                 dataType:'json',
                 type:'post'
             },
             create:{
-                url:url+'/create',
+                url:'create',
                 dataType:'json',
                 type:'get'
             },
