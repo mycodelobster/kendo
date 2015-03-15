@@ -2,17 +2,20 @@
 
 class Grid {
 
-	public $table_name;
+	public $table = false;
 	public $where = false;
 	public $join = false;
 	public $debug = false;
 	public $column = false;
 	public $CI;
 
-	public function __construct($config)
+	public function __construct($config=array())
 	{
 		$this->CI =& get_instance();
-		$this->table_name = $config['table_name'];
+		if(isset($config['table']))
+		{
+			$this->table = $config['table'];
+		} 
 
 		if(isset($config['debug']) && $config['debug'] === true)
 		{
@@ -33,6 +36,11 @@ class Grid {
 		{
 			$this->column = $config['column'];
 		}
+	}
+
+	public function script()
+	{
+		require_once('grid/test.php');
 	}
 
 	public function data()
@@ -59,7 +67,7 @@ class Grid {
 
 		/* Main Query Filter */
 		$this->build_filter($filter);
-		$this->CI->db->from($this->table_name);
+		$this->CI->db->from($this->table);
 		$this->CI->db->limit($pageSize);
 		$this->CI->db->offset($skip);
 		$data = $this->CI->db->get()->result();
@@ -67,7 +75,7 @@ class Grid {
 
 		/* Total Result Query */
 		$this->build_filter($filter);
-		$this->CI->db->from($this->table_name);
+		$this->CI->db->from($this->table);
 		$total_data = $this->CI->db->get()->num_rows();
 
 		/* Returning Data */
@@ -216,7 +224,7 @@ class Grid {
 				'type' => 'left'
 				)
 			);
-		$config['table_name'] = 'stock_master';
+		$config['table'] = 'stock_master';
 		$this->load->library('grid', $config);
 		$data = $this->grid->data();
 		$this->grid->output($data);		
