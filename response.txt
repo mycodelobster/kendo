@@ -1,2 +1,1 @@
-$response['status'] = 'success' ; // error | succes
-$response['info'] = 'info for error or success';
+$response['error'] = 'error message' ; // must be set for server validation
