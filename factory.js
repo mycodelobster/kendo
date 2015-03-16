@@ -20,6 +20,7 @@
 				},
 				pageSize:10,
 				requestEnd:function(e){
+					console.log(e);
 					/*
 					if(e.response.status=='error'){
 						this.read();
@@ -40,8 +41,8 @@
 					mode: "popup"
 				},
 				edit: function (e) {
-					var popupWindow = e.container.getKendoWindow();
 					e.container.find(".k-edit-form-container").width("auto");
+					var popupWindow = e.container.getKendoWindow();
 					popupWindow.setOptions({
 						title: '',
 						width: 600,
