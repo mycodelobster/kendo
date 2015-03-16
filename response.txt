@@ -1,0 +1,2 @@
+$response['status'] = 'success' ; // error | succes
+$response['info'] = 'info for error or success';
