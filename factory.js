@@ -14,21 +14,43 @@
 				schema:{
 					data:'data',
 					total:'total',
-					error:'error',
+					errors: function(response) {
+						return response.error; 
+					}
 				},
 				pageSize:10,
 				requestEnd:function(e){
-					console.log(e);
-				}
+					/*
+					if(e.response.status=='error'){
+						this.read();
+					}
+					*/
+				},
+				error: function (e) {
+					this.cancelChanges();
+				},
 			},
 
 			gridSetting:{
-				pageable: true,
+				resizable: true,
+				pageable: {refresh:true},
 				sortable: { mode: "multiple", allowUnsort: true },
-				filterable: true,
-				edit:function(e){
-					console.log(e);
-				}
+				filterable: {extra:false, mode:'row'},
+				editable: {
+					mode: "popup"
+				},
+				edit: function (e) {
+					var popupWindow = e.container.getKendoWindow();
+					e.container.find(".k-edit-form-container").width("auto");
+					popupWindow.setOptions({
+						title: '',
+						width: 600,
+					});
+					popupWindow.center();
+				},
+				error: function(e) {
+					this.cancelChanges()
+				},
 			},
 
 			extend: function (settings) {
