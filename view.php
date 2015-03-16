@@ -1,15 +1,45 @@
 <div class="container" ng-app="App" ng-controller="Ctrl">
-
-	
-
-	<script type="text/x-kendo-template" id="template">
-		<kendo-button icon="'plus'"> ADD NEW</kendo-button>
-		<div class="pull-right">
-			<kendo-dropdownlist id="category" k-options="catList" style="width: 300px;margin-right: 10px;"> </kendo-dropdownlist>
-			<kendo-dropdownlist k-options="stockList" style="width: 300px;margin-right: 10px;"> </kendo-dropdownlist>
-		</div>
-	</script>
-	<div kendo-grid k-options="gridOption"></div>
-	<?php $this->load->view('customer/modal')?>
-	<?php $this->load->view('customer/script')?>
+	<div id="dialog" kendo-window="dialog" k-width="500" k-modal="true" k-visible="false"></div>
+	<div id="grid" kendo-grid="grid" k-options="options"></div>
 </div>
+<?php $this->load->view('script/app')?>
+<script type="text/javascript">
+	app.controller('Ctrl', function($scope, $http, MyFactory){
+
+		var fields = {
+			stock_id: { editable: false, nullable: true, visible:false },
+			description: { validation:{required:true} },
+		};
+		var columns = [
+		{field:'stock_id', title:'Stock'},
+		{field:'description', title:'Description'},
+		{command:['edit','destroy']}
+		];
+		$scope.options = MyFactory.gridSetting.extend({
+			baseUrl:'app',
+			dataSource:{
+				schema:{
+					model: {
+						id: "stock_id",
+						fields:fields
+					}
+				},
+				error: error,
+			},
+			options:{
+				toolbar:['create'],
+				columns:columns,
+				editable:'popup'
+			}
+		});
+
+		function error(args) {
+			if (args.errors) {
+				$scope.dialog.content(args.errors).center().open();
+				$scope.grid.one("dataBinding", function (e) {  
+					e.preventDefault();   
+				});
+			}
+		}   
+	})
+</script>
