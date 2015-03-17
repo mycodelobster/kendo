@@ -7,6 +7,7 @@ class Grid {
 	public $join = false;
 	public $debug = false;
 	public $column = false;
+	public $order = false;
 	public $CI;
 
 	public function __construct($config=array())
@@ -36,11 +37,11 @@ class Grid {
 		{
 			$this->column = $config['column'];
 		}
-	}
 
-	public function script()
-	{
-		require_once('grid/test.php');
+		if(isset($config['order']) && is_array($config['order']))
+		{
+			$this->order = $config['order'];
+		}
 	}
 
 	public function data()
@@ -86,10 +87,9 @@ class Grid {
 			$result['Sort'] = $sort;
 		}
 
-		$result['Data'] = $data;
-		$result['Total'] = $total_data;
-		$result['Response'] = 'success';
-
+		$result['data'] = $data;
+		$result['total'] = $total_data;
+		$result['status'] = 'success';
 
 		return $result;
 	}
@@ -116,6 +116,21 @@ class Grid {
 					$field = $item['field'];
 					$value = $item['value'];
 					$this->CI->db->where($field, $value);	
+				}
+			}
+		}
+
+
+		/* if any sort declare in config params */
+		if($this->order)
+		{
+			foreach ($this->order as $item) 
+			{
+				if(isset($item['field']) && isset($item['type']))
+				{
+					$field = $item['field'];
+					$type = $item['type'];
+					$this->CI->db->order_by($field, $type);	
 				}
 			}
 		}
@@ -164,6 +179,16 @@ class Grid {
 		$operator = $params['operator'];
 		$value = $params['value'];
 
+		/*
+		foreach ($this->column as $value) {
+			$check = stripos($value, " as ".$field);
+			if($check !==false){
+				$field = explode(' ',$value);
+				$field = $field[0];
+			}
+		}
+		*/
+
 		if($operator == 'eq') 
 		{
 			$this->CI->db->where($field, $value);
@@ -188,6 +213,26 @@ class Grid {
 		elseif( $operator == 'endswith' ) 
 		{
 			$this->CI->db->like($field, $value,'before');
+		}
+		elseif( $operator == 'gte' ) 
+		{
+			$field = $field . ' >= ';
+			$this->CI->db->where($field, $value);
+		}
+		elseif( $operator == 'gt' ) 
+		{
+			$field = $field . ' > ';
+			$this->CI->db->where($field, $value);
+		}
+		elseif( $operator == 'lte' ) 
+		{
+			$field = $field . ' <= ';
+			$this->CI->db->where($field, $value);
+		}
+		elseif( $operator == 'lt' ) 
+		{
+			$field = $field . ' > ';
+			$this->CI->db->where($field, $value);
 		}
 		return $this;
 	}
@@ -215,6 +260,14 @@ class Grid {
 				'value' => 'D-3MM'
 				)
 			);
+
+		$config['order'] = array(
+			array(
+				"field" => 'stock_id',
+				'type' => 'desc',
+				)
+			);
+
 		$config['join'] = array(
 			array(
 				"table" => 'stock_master',
