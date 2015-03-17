@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ERP Now</title>
+	<?php $this->load->view('script/header')?>
+</head>
+<body>
+	<?php // $this->load->view('navbar/default')?>
+	<?php echo br(5) ?>
+	<?php if(isset($template)) $this->load->view($template)?>
+	<?php $this->load->view('script/footer')?>
+</body>
+</html>
