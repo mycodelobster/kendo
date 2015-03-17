@@ -1,0 +1,11 @@
+<form kendo-validator="validator" ng-submit="submit($event)">
+			<input class="k-textbox" required ng-model="modalData.description" />
+		</form>
+		
+		
+		$scope.submit = function(event){
+					event.preventDefault();
+					if ($scope.validator.validate()) {
+					
+					}
+				}
