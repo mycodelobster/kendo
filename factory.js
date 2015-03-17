@@ -21,11 +21,6 @@
 				pageSize:10,
 				requestEnd:function(e){
 					console.log(e);
-					/*
-					if(e.response.status=='error'){
-						this.read();
-					}
-					*/
 				},
 				error: function (e) {
 					this.cancelChanges();
