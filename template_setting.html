@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" type="text/css" href="<?=base_url('assets/plugin/bootstrap/dist/css/bootstrap.min.css')?>">
+	<link href="<?=base_url('assets/plugin/kendo-ui/styles/kendo.common-material.min.css')?>" rel="stylesheet">
+	<link href="<?=base_url('assets/plugin/kendo-ui/styles/kendo.material.min.css')?>" rel="stylesheet">
+
+
+	<script type="text/javascript" src="<?=base_url('assets/plugin/jquery/dist/jquery.min.js')?>"></script>
+	<script src="<?=base_url('assets/plugin/kendo-ui/js/angular.min.js')?>"></script>
+	<script src="<?=base_url('assets/plugin/kendo-ui/js/kendo.all.min.js')?>"></script>
+	<link rel="stylesheet" type="text/css" href="<?=base_url('assets/style/main.css')?>">
+
+</head>
+<body>	
+	
+	<?php if(isset($modul)) { ?>
+	<div class="container"  ng-app="App" ng-controller="Ctrl">
+	<?php }else{ ?>
+	<div class="container">
+	<?php } ?>
+
+		<?php  
+		echo br(5);
+		if(isset($modul))
+		{
+			$this->load->view($modul.'/'.$modul.'_view');
+		}
+
+		if(isset($modul))
+		{	
+			if(isset($modal))
+			{
+				if($modal!==false || $modal==true)
+				{
+					$this->load->view($modul.'/'.$modul.'_modal');
+				}
+			}
+			else
+			{
+				$this->load->view($modul.'/'.$modul.'_modal');
+			}
+		}
+
+
+		if(isset($modul))
+		{	
+			if(isset($script))
+			{
+				if($script!==false || $script==true)
+				{
+					$this->load->view('script/app');
+					$this->load->view($modul.'/'.$modul.'_script');
+				}
+			}
+			else
+			{
+				$this->load->view('script/app');
+				$this->load->view($modul.'/'.$modul.'_script');
+			}
+		}
+		?>
+	</div>
+</body>
+</html>
