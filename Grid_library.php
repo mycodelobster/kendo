@@ -13,6 +13,13 @@ class Grid {
 	public function __construct($config=array())
 	{
 		$this->CI =& get_instance();
+
+		$is_ajax = $this->CI->input->is_ajax_request();
+		if($is_ajax==false)
+		{
+			$this->CI->json->output(false,500);
+		}
+
 		if(isset($config['table']))
 		{
 			$this->table = $config['table'];
@@ -72,6 +79,7 @@ class Grid {
 		$this->CI->db->limit($pageSize);
 		$this->CI->db->offset($skip);
 		$data = $this->CI->db->get()->result();
+		$last_query = $this->CI->db->last_query();
 
 
 		/* Total Result Query */
@@ -82,9 +90,10 @@ class Grid {
 		/* Returning Data */
 		if($this->debug)
 		{
-			$result['Filter'] = $filter;
-			$result['LastQuery'] = $this->CI->db->last_query();
-			$result['Sort'] = $sort;
+			$result['query'] = $last_query;
+			$result['xxx'] = $this->CI->input->is_ajax_request();
+			$result['filter'] = $filter;
+			$result['sort'] = $sort;
 		}
 
 		$result['data'] = $data;
@@ -179,15 +188,23 @@ class Grid {
 		$operator = $params['operator'];
 		$value = $params['value'];
 
-		/*
-		foreach ($this->column as $value) {
-			$check = stripos($value, " as ".$field);
-			if($check !==false){
-				$field = explode(' ',$value);
-				$field = $field[0];
+
+		/* Find AS */
+		foreach ($this->column as $string) 
+		{
+			$string = preg_replace('#'.preg_quote(' ', '#').'{2,}#', ' ', $string);
+			$string = trim($string);
+			$array = explode(" as ",$string);
+
+			if(count($array)==2)
+			{
+				if($array[1]==$field)
+				{
+					$field = $array[0];
+				}
 			}
+			
 		}
-		*/
 
 		if($operator == 'eq') 
 		{
