@@ -1,7 +1,11 @@
 <div kendo-grid="grid"  k-options="GridOptions"></div>
-<script type="text/x-kendo-template" id="template" styles="padding:20px">
-	<input   ng-model="dataItem.br_name" class="k-textbox"  required>
-	<select ng-model="dataItem.debtor_no" kendo-dropdownlist k-options="customers" required></select>
+<script type="text/x-kendo-template" id="template">
+	<div style="padding:20px">
+		<label>Demo</label>
+		<input   ng-model="dataItem.br_name" class="k-textbox"  required>
+		<label>Select</label>
+		<select ng-model="dataItem.debtor_no" kendo-dropdownlist k-options="customers" required></select>
+	</div>
 </script>
 
 <span kendo-notification="formError"></span>
