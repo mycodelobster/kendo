@@ -1,5 +1,4 @@
 <div kendo-grid="grid"  k-options="GridOptions"></div>
-<div kendo-window="notification"  k-visible="false" k-window="true" k-animation="false"></div>
 <span kendo-notification="formError"  k-animation='false'></span>
 <script type="text/javascript">
 	app.controller('Ctrl', function($scope, $http){
